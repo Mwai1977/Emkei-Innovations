@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVI Investment Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1>NVI Investment Dashboard</h1>
+        <p class="header-subtitle">National Veterinary Institute - Comprehensive Reform Plan</p>
+      </div>
+      <div class="header-actions">
+        <button id="import-excel-btn" class="header-btn">Import Excel</button>
+        <button id="export-data-btn" class="header-btn">Export Data</button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-navigation">
+      <button class="tab-btn active" data-tab="module1">
+        <span class="tab-icon">📊</span>
+        Equipment Investment
+      </button>
+      <button class="tab-btn" data-tab="module2">
+        <span class="tab-icon">🎯</span>
+        Product Portfolio
+      </button>
+      <button class="tab-btn" data-tab="module3">
+        <span class="tab-icon">📈</span>
+        Scenario Comparison
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Module 1: Equipment Investment Prioritization -->
+      <section id="module1" class="module-content active">
+        <div class="module-header">
+          <h2>Equipment Investment Prioritization</h2>
+          <p>Interactive analysis of 23 production lines for CAPEX prioritization</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="statistics-grid">
+          <div class="stat-card">
+            <label>Total CAPEX Required</label>
+            <value id="total-capex">$0M</value>
+            <span class="stat-subtitle">Selected Lines</span>
+          </div>
+          <div class="stat-card">
+            <label>Critical Lines</label>
+            <value id="critical-count">0</value>
+            <span class="stat-subtitle">High Priority</span>
+          </div>
+          <div class="stat-card">
+            <label>Average ROI Timeline</label>
+            <value id="avg-roi">0 years</value>
+            <span class="stat-subtitle">Payback Period</span>
+          </div>
+          <div class="stat-card">
+            <label>GMP Compliance Gap</label>
+            <value id="gmp-gap">0%</value>
+            <span class="stat-subtitle">Below Standard</span>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-section">
+          <button class="filter-btn active" data-filter="all">All Production Lines</button>
+          <button class="filter-btn" data-filter="critical">Critical Only</button>
+          <button class="filter-btn" data-filter="high-revenue">High Revenue Impact</button>
+          <button class="filter-btn" data-filter="strategic">Strategic Priority</button>
+        </div>
+
+        <!-- Scatter Plot -->
+        <div class="chart-container">
+          <canvas id="scatterChart"></canvas>
+        </div>
+
+        <!-- Detail Panel -->
+        <div id="detail-panel" class="detail-panel">
+          <button id="close-detail" class="close-btn">&times;</button>
+          <div id="detail-content"></div>
+        </div>
+      </section>
+
+      <!-- Module 2: Product Portfolio Optimizer -->
+      <section id="module2" class="module-content">
+        <div class="module-header">
+          <h2>Product Portfolio Optimizer</h2>
+          <p>Multi-criteria decision matrix for vaccine and drug prioritization</p>
+        </div>
+
+        <!-- Weight Controls -->
+        <div class="weight-controls">
+          <h3>Adjust Priority Weights</h3>
+          <div class="weights-grid">
+            <div class="weight-item">
+              <label>Market Demand</label>
+              <input type="range" id="marketDemand-slider" min="0" max="100" value="20" class="weight-slider">
+              <span id="marketDemand-value" class="weight-value">20%</span>
+            </div>
+
+            <div class="weight-item">
+              <label>Profit Margin</label>
+              <input type="range" id="profitMargin-slider" min="0" max="100" value="20" class="weight-slider">
+              <span id="profitMargin-value" class="weight-value">20%</span>
+            </div>
+
+            <div class="weight-item">
+              <label>Technical Feasibility</label>
+              <input type="range" id="technicalFeasibility-slider" min="0" max="100" value="20" class="weight-slider">
+              <span id="technicalFeasibility-value" class="weight-value">20%</span>
+            </div>
+
+            <div class="weight-item">
+              <label>Competitive Position</label>
+              <input type="range" id="competitivePosition-slider" min="0" max="100" value="20" class="weight-slider">
+              <span id="competitivePosition-value" class="weight-value">20%</span>
+            </div>
+
+            <div class="weight-item">
+              <label>Regulatory Complexity (Inverse)</label>
+              <input type="range" id="regulatoryComplexity-slider" min="0" max="100" value="20" class="weight-slider">
+              <span id="regulatoryComplexity-value" class="weight-value">20%</span>
+            </div>
+          </div>
+
+          <div class="weight-summary">
+            <span>Total Weight: <strong id="total-weight">100%</strong></span>
+            <button id="normalize-weights" class="normalize-btn">Reset to Equal Weights</button>
+          </div>
+        </div>
+
+        <!-- Rankings Table -->
+        <div class="rankings-section">
+          <h3>Product Rankings</h3>
+          <div class="table-container">
+            <table class="rankings-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Product Name</th>
+                  <th>Type</th>
+                  <th>Weighted Score</th>
+                  <th>Priority</th>
+                  <th>Est. Investment</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rankings-tbody">
+                <!-- Populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Product Detail Modal -->
+        <div id="product-modal" class="modal">
+          <div class="modal-content">
+            <button id="close-modal" class="close-btn">&times;</button>
+            <div id="product-detail-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Module 3: Scenario Comparison -->
+      <section id="module3" class="module-content">
+        <div class="module-header">
+          <h2>Scenario Comparison</h2>
+          <p>Compare three investment strategies for NVI modernization</p>
+        </div>
+
+        <!-- Scenario Cards -->
+        <div class="scenarios-grid">
+          <div id="conservative-card" class="scenario-card"></div>
+          <div id="moderate-card" class="scenario-card"></div>
+          <div id="aggressive-card" class="scenario-card"></div>
+        </div>
+
+        <!-- Comparison Chart -->
+        <div class="comparison-section">
+          <h3>Investment vs Revenue Growth Comparison</h3>
+          <div class="chart-container">
+            <canvas id="comparisonChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Scenario Detail Modal -->
+        <div id="scenario-modal" class="modal">
+          <div class="modal-content large">
+            <button id="close-scenario-modal" class="close-btn">&times;</button>
+            <div id="scenario-detail-content"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2024 Ethiopian Investment Holdings - NVI Comprehensive Reform Plan</p>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="navigation.js"></script>
+  <script src="module1.js"></script>
+  <script src="module2.js"></script>
+  <script src="module3.js"></script>
+  <script src="excel-import.js"></script>
+</body>
+</html>

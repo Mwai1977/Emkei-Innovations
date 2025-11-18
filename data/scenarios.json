@@ -1,0 +1,70 @@
+{
+  "conservative": {
+    "name": "Conservative Scenario",
+    "totalInvestment": 8.5,
+    "productionLines": 8,
+    "linesIncluded": [1, 2, 4, 16, 17, 18, 20, 21],
+    "revenueImpact": 35,
+    "paybackPeriod": 4.5,
+    "riskLevel": "Low",
+    "marketPosition": "Ethiopia Focus",
+    "description": "Focus on critical GMP compliance and safety improvements for domestic market stability",
+    "keyBenefits": [
+      "Immediate GMP compliance for core products",
+      "Reduced operational risk",
+      "Stable domestic market position",
+      "Lower financial exposure"
+    ],
+    "considerations": [
+      "Limited regional expansion capability",
+      "Slower revenue growth",
+      "May miss market opportunities"
+    ]
+  },
+  "moderate": {
+    "name": "Moderate Scenario",
+    "totalInvestment": 15.2,
+    "productionLines": 15,
+    "linesIncluded": [1, 2, 3, 4, 5, 8, 11, 15, 16, 17, 18, 19, 20, 21, 23],
+    "revenueImpact": 65,
+    "paybackPeriod": 3.8,
+    "riskLevel": "Medium",
+    "marketPosition": "EAC Expansion",
+    "description": "Balanced approach targeting East African Community market with key vaccine and pharmaceutical lines",
+    "keyBenefits": [
+      "Full GMP compliance achieved",
+      "Regional market penetration",
+      "Diversified product portfolio",
+      "Strong competitive position in EAC"
+    ],
+    "considerations": [
+      "Requires skilled workforce expansion",
+      "Moderate financial commitment",
+      "Regulatory compliance in multiple countries"
+    ]
+  },
+  "aggressive": {
+    "name": "Aggressive Scenario",
+    "totalInvestment": 24.7,
+    "productionLines": 23,
+    "linesIncluded": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    "revenueImpact": 120,
+    "paybackPeriod": 3.2,
+    "riskLevel": "High",
+    "marketPosition": "Regional Leader",
+    "description": "Comprehensive modernization for pan-African market leadership and AU PANVAC partnership",
+    "keyBenefits": [
+      "Complete facility modernization",
+      "Pan-African market leadership",
+      "AU PANVAC strategic partnership",
+      "Maximum revenue potential",
+      "Full product portfolio capability"
+    ],
+    "considerations": [
+      "Significant capital requirement",
+      "Complex implementation timeline",
+      "High operational complexity",
+      "Requires substantial workforce development"
+    ]
+  }
+}
