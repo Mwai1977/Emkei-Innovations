@@ -1,0 +1,16 @@
+{
+  "products": [
+    {"id": 1, "name": "Newcastle Disease", "type": "Viral Vaccine", "demand": 95, "margin": 45, "feasibility": 85, "competitive": 80, "regulatory": 65, "investment": "1.2-2.1"},
+    {"id": 2, "name": "Foot & Mouth Disease", "type": "Viral Vaccine", "demand": 92, "margin": 50, "feasibility": 70, "competitive": 75, "regulatory": 80, "investment": "1.8-2.5"},
+    {"id": 3, "name": "Lumpy Skin Disease", "type": "Viral Vaccine", "demand": 88, "margin": 48, "feasibility": 75, "competitive": 85, "regulatory": 70, "investment": "1.5-2.0"},
+    {"id": 4, "name": "Combined Poultry Vaccine", "type": "Combined", "demand": 90, "margin": 55, "feasibility": 65, "competitive": 70, "regulatory": 75, "investment": "1.4-1.9"},
+    {"id": 5, "name": "PPR Vaccine", "type": "Viral Vaccine", "demand": 85, "margin": 52, "feasibility": 80, "competitive": 90, "regulatory": 68, "investment": "1.6-2.2"},
+    {"id": 6, "name": "Brucellosis Vaccine", "type": "Bacterial", "demand": 80, "margin": 42, "feasibility": 88, "competitive": 75, "regulatory": 72, "investment": "1.3-1.7"},
+    {"id": 7, "name": "Rabies Vaccine", "type": "Viral Vaccine", "demand": 87, "margin": 60, "feasibility": 78, "competitive": 65, "regulatory": 85, "investment": "1.8-2.4"},
+    {"id": 8, "name": "Rift Valley Fever", "type": "Viral Vaccine", "demand": 75, "margin": 58, "feasibility": 65, "competitive": 80, "regulatory": 88, "investment": "1.9-2.6"},
+    {"id": 9, "name": "Anthrax Vaccine", "type": "Bacterial", "demand": 78, "margin": 38, "feasibility": 92, "competitive": 70, "regulatory": 60, "investment": "0.8-1.2"},
+    {"id": 10, "name": "Blackleg Vaccine", "type": "Bacterial", "demand": 72, "margin": 35, "feasibility": 90, "competitive": 68, "regulatory": 58, "investment": "0.7-1.0"},
+    {"id": 11, "name": "Sheep & Goat Pox", "type": "Viral Vaccine", "demand": 70, "margin": 44, "feasibility": 82, "competitive": 72, "regulatory": 65, "investment": "1.1-1.5"},
+    {"id": 12, "name": "Contagious Caprine", "type": "Bacterial", "demand": 68, "margin": 40, "feasibility": 85, "competitive": 70, "regulatory": 62, "investment": "1.0-1.4"}
+  ]
+}

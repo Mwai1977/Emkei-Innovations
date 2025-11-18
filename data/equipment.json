@@ -1,0 +1,27 @@
+{
+  "equipment": [
+    {"id": 1, "name": "Line 1: Newcastle Disease", "investment": 1.2, "impact": 92, "complexity": 85, "risk": "high", "type": "Viral - Critical", "priority": "Critical", "roi": 3.5, "gmpcompliance": 65},
+    {"id": 2, "name": "Line 2: Foot & Mouth Disease", "investment": 2.1, "impact": 95, "complexity": 90, "risk": "high", "type": "Viral - Critical", "priority": "Critical", "roi": 3.2, "gmpcompliance": 60},
+    {"id": 3, "name": "Line 3: Lumpy Skin Disease", "investment": 1.5, "impact": 88, "complexity": 75, "risk": "high", "type": "Viral - Critical", "priority": "Critical", "roi": 3.8, "gmpcompliance": 62},
+    {"id": 4, "name": "Line 4: Anthrax Vaccine", "investment": 0.8, "impact": 85, "complexity": 60, "risk": "medium", "type": "Bacterial", "priority": "High", "roi": 4.2, "gmpcompliance": 75},
+    {"id": 5, "name": "Line 5: Blackleg Vaccine", "investment": 0.7, "impact": 78, "complexity": 55, "risk": "medium", "type": "Bacterial", "priority": "High", "roi": 4.5, "gmpcompliance": 78},
+    {"id": 6, "name": "Line 6: Brucellosis Vaccine", "investment": 1.3, "impact": 82, "complexity": 70, "risk": "high", "type": "Bacterial - Strategic", "priority": "Critical", "roi": 3.9, "gmpcompliance": 68},
+    {"id": 7, "name": "Line 7: Rabies Vaccine", "investment": 1.8, "impact": 90, "complexity": 80, "risk": "high", "type": "Viral - Strategic", "priority": "Critical", "roi": 3.4, "gmpcompliance": 63},
+    {"id": 8, "name": "Line 8: PPR Vaccine", "investment": 1.6, "impact": 87, "complexity": 75, "risk": "high", "type": "Viral - AU PANVAC", "priority": "Critical", "roi": 3.6, "gmpcompliance": 65},
+    {"id": 9, "name": "Line 9: Pasteurellosis", "investment": 0.9, "impact": 72, "complexity": 60, "risk": "medium", "type": "Bacterial", "priority": "Medium", "roi": 4.8, "gmpcompliance": 72},
+    {"id": 10, "name": "Line 10: Contagious Caprine", "investment": 1.0, "impact": 75, "complexity": 65, "risk": "medium", "type": "Bacterial", "priority": "High", "roi": 4.3, "gmpcompliance": 70},
+    {"id": 11, "name": "Line 11: Sheep Pox", "investment": 1.2, "impact": 80, "complexity": 70, "risk": "medium", "type": "Viral", "priority": "High", "roi": 4.0, "gmpcompliance": 73},
+    {"id": 12, "name": "Line 12: Goat Pox", "investment": 1.1, "impact": 78, "complexity": 68, "risk": "medium", "type": "Viral", "priority": "High", "roi": 4.1, "gmpcompliance": 74},
+    {"id": 13, "name": "Line 13: Fowl Typhoid", "investment": 0.6, "impact": 65, "complexity": 50, "risk": "low", "type": "Bacterial", "priority": "Medium", "roi": 5.2, "gmpcompliance": 80},
+    {"id": 14, "name": "Line 14: Fowl Cholera", "investment": 0.5, "impact": 62, "complexity": 48, "risk": "low", "type": "Bacterial", "priority": "Medium", "roi": 5.5, "gmpcompliance": 82},
+    {"id": 15, "name": "Line 15: Combined Poultry", "investment": 1.4, "impact": 83, "complexity": 85, "risk": "high", "type": "Combined - Priority", "priority": "Critical", "roi": 3.7, "gmpcompliance": 66},
+    {"id": 16, "name": "Line 16: Hemorrhagic Septicemia", "investment": 0.8, "impact": 68, "complexity": 55, "risk": "medium", "type": "Bacterial", "priority": "Medium", "roi": 4.9, "gmpcompliance": 76},
+    {"id": 17, "name": "Line 17: Clostridial Vaccines", "investment": 0.9, "impact": 70, "complexity": 60, "risk": "medium", "type": "Bacterial", "priority": "Medium", "roi": 4.6, "gmpcompliance": 75},
+    {"id": 18, "name": "Line 18: Diagnostic Kits", "investment": 0.4, "impact": 55, "complexity": 40, "risk": "low", "type": "Diagnostics", "priority": "Low", "roi": 6.0, "gmpcompliance": 85},
+    {"id": 19, "name": "Line 19: Antisera Production", "investment": 0.7, "impact": 60, "complexity": 50, "risk": "low", "type": "Sera", "priority": "Medium", "roi": 5.3, "gmpcompliance": 78},
+    {"id": 20, "name": "Line 20: Rift Valley Fever", "investment": 1.9, "impact": 86, "complexity": 88, "risk": "high", "type": "Viral - Strategic", "priority": "Critical", "roi": 3.5, "gmpcompliance": 64},
+    {"id": 21, "name": "Line 21: Trypanosomiasis", "investment": 0.5, "impact": 58, "complexity": 45, "risk": "low", "type": "Pharmaceutical", "priority": "Low", "roi": 5.8, "gmpcompliance": 88},
+    {"id": 22, "name": "Line 22: Blue Tongue", "investment": 1.3, "impact": 76, "complexity": 72, "risk": "medium", "type": "Viral", "priority": "High", "roi": 4.2, "gmpcompliance": 71},
+    {"id": 23, "name": "Line 23: Research/Pilot", "investment": 0.3, "impact": 45, "complexity": 30, "risk": "low", "type": "R&D", "priority": "Low", "roi": 7.0, "gmpcompliance": 90}
+  ]
+}

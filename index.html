@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVI Investment Dashboard - Ethiopian Investment Holdings</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1>NVI Investment Dashboard</h1>
+            <p>National Veterinary Institute - Comprehensive Reform Plan Investment Analysis</p>
+        </div>
+        <div class="header-actions">
+            <button id="importExcel" class="btn btn-primary">Import Excel</button>
+            <button id="exportPDF" class="btn btn-secondary">Export PDF</button>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="equipment">Equipment Investment</button>
+        <button class="tab-btn" data-tab="portfolio">Product Portfolio</button>
+        <button class="tab-btn" data-tab="scenarios">Scenario Comparison</button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Module 1: Equipment Investment Prioritization -->
+        <section id="equipment-module" class="module active">
+            <div class="module-header">
+                <h2>Equipment Investment Prioritization</h2>
+                <p>Interactive analysis of 23 vaccine production lines for CAPEX prioritization</p>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-container">
+                <label class="filter-label">Filter by:</label>
+                <select id="equipmentFilter" class="filter-select">
+                    <option value="all">All Production Lines</option>
+                    <option value="critical">Critical Only (GMP/Safety Priority)</option>
+                    <option value="highimpact">High Revenue Impact (Score ≥80)</option>
+                    <option value="strategic">Strategic (AU PANVAC/Regional)</option>
+                </select>
+            </div>
+
+            <!-- Statistics Dashboard -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total CAPEX Required</h3>
+                    <p class="stat-value" id="totalCapex">$0.0M</p>
+                    <p class="stat-label">Selected Lines</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Critical Lines</h3>
+                    <p class="stat-value" id="criticalCount">0</p>
+                    <p class="stat-label">Priority = Critical</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Average ROI Timeline</h3>
+                    <p class="stat-value" id="avgROI">0.0 years</p>
+                    <p class="stat-label">Payback Period</p>
+                </div>
+                <div class="stat-card">
+                    <h3>GMP Compliance Gap</h3>
+                    <p class="stat-value" id="gmpGap">0%</p>
+                    <p class="stat-label">Below Standard</p>
+                </div>
+            </div>
+
+            <!-- Scatter Plot Chart -->
+            <div class="chart-container">
+                <canvas id="equipmentChart"></canvas>
+            </div>
+
+            <!-- Equipment Details Panel -->
+            <div id="equipmentDetails" class="details-panel" style="display: none;">
+                <div class="details-header">
+                    <h3 id="detailsTitle">Equipment Details</h3>
+                    <button id="closeDetails" class="btn-close">×</button>
+                </div>
+                <div id="detailsContent" class="details-content"></div>
+            </div>
+        </section>
+
+        <!-- Module 2: Product Portfolio Optimizer -->
+        <section id="portfolio-module" class="module">
+            <div class="module-header">
+                <h2>Product Portfolio Optimizer</h2>
+                <p>Multi-criteria decision matrix for vaccine/drug prioritization with weighted scoring</p>
+            </div>
+
+            <!-- Weight Sliders -->
+            <div class="sliders-container">
+                <div class="slider-group">
+                    <label>Market Demand Weight: <span id="demandWeight">20</span>%</label>
+                    <input type="range" id="demandSlider" min="0" max="100" value="20" class="weight-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Profit Margin Weight: <span id="marginWeight">20</span>%</label>
+                    <input type="range" id="marginSlider" min="0" max="100" value="20" class="weight-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Technical Feasibility Weight: <span id="feasibilityWeight">20</span>%</label>
+                    <input type="range" id="feasibilitySlider" min="0" max="100" value="20" class="weight-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Competitive Position Weight: <span id="competitiveWeight">20</span>%</label>
+                    <input type="range" id="competitiveSlider" min="0" max="100" value="20" class="weight-slider">
+                </div>
+                <div class="slider-group">
+                    <label>Regulatory Complexity Weight (inverse): <span id="regulatoryWeight">20</span>%</label>
+                    <input type="range" id="regulatorySlider" min="0" max="100" value="20" class="weight-slider">
+                </div>
+                <div class="total-weight">
+                    Total Weight: <span id="totalWeight">100</span>%
+                </div>
+            </div>
+
+            <!-- Results Table -->
+            <div class="table-container">
+                <table id="portfolioTable" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Product Name</th>
+                            <th>Type</th>
+                            <th>Weighted Score</th>
+                            <th>Priority</th>
+                            <th>Est. Investment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portfolioTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Module 3: Scenario Comparison -->
+        <section id="scenarios-module" class="module">
+            <div class="module-header">
+                <h2>Scenario Comparison</h2>
+                <p>Side-by-side analysis of three investment strategies for NVI reform</p>
+            </div>
+
+            <!-- Scenario Cards -->
+            <div class="scenarios-grid">
+                <div class="scenario-card conservative">
+                    <div class="scenario-header">
+                        <h3>Conservative Scenario</h3>
+                        <span class="scenario-badge low-risk">Low Risk</span>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="scenario-item">
+                            <span class="label">Total Investment:</span>
+                            <span class="value">$8.5M</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Production Lines:</span>
+                            <span class="value">8 Critical</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Revenue Impact (5yr):</span>
+                            <span class="value">+35%</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Payback Period:</span>
+                            <span class="value">4.5 years</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Market Position:</span>
+                            <span class="value">Ethiopia Focus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-card moderate">
+                    <div class="scenario-header">
+                        <h3>Moderate Scenario</h3>
+                        <span class="scenario-badge medium-risk">Medium Risk</span>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="scenario-item">
+                            <span class="label">Total Investment:</span>
+                            <span class="value">$15.2M</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Production Lines:</span>
+                            <span class="value">15 Lines</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Revenue Impact (5yr):</span>
+                            <span class="value">+65%</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Payback Period:</span>
+                            <span class="value">3.8 years</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Market Position:</span>
+                            <span class="value">EAC Expansion</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scenario-card aggressive">
+                    <div class="scenario-header">
+                        <h3>Aggressive Scenario</h3>
+                        <span class="scenario-badge high-risk">High Risk</span>
+                    </div>
+                    <div class="scenario-content">
+                        <div class="scenario-item">
+                            <span class="label">Total Investment:</span>
+                            <span class="value">$24.7M</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Production Lines:</span>
+                            <span class="value">All 23 Lines</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Revenue Impact (5yr):</span>
+                            <span class="value">+120%</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Payback Period:</span>
+                            <span class="value">3.2 years</span>
+                        </div>
+                        <div class="scenario-item">
+                            <span class="label">Market Position:</span>
+                            <span class="value">Regional Leader</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Chart -->
+            <div class="chart-container">
+                <canvas id="scenariosChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>Ethiopian Investment Holdings (EIH) | National Veterinary Institute Reform Plan | Version 1.0.0</p>
+    </footer>
+
+    <!-- Import Modal -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import Excel Data</h3>
+                <button class="btn-close" onclick="closeImportModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Select an Excel file (.xlsx) to import equipment and product data.</p>
+                <div class="import-preview" id="importPreview"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeImportModal()">Cancel</button>
+                <button class="btn btn-primary" id="confirmImport">Confirm Import</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
