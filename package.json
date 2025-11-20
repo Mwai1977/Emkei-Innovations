@@ -1,0 +1,64 @@
+{
+  "name": "nvi-investment-dashboard",
+  "version": "1.0.0",
+  "description": "National Veterinary Institute Investment Decision Support Dashboard",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "keywords": [
+    "investment",
+    "dashboard",
+    "NVI",
+    "veterinary",
+    "decision-support"
+  ],
+  "author": "Ethiopian Investment Holdings",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1",
+    "xlsx": "^0.18.5"
+  },
+  "build": {
+    "appId": "com.eih.nvi-dashboard",
+    "productName": "NVI Investment Dashboard",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "src/**/*",
+      "data/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.business"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Office"
+    }
+  }
+}
