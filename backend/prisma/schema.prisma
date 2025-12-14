@@ -1,0 +1,538 @@
+// EMKEI Capacity Building Platform - Database Schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  PARTICIPANT
+  FACILITATOR
+  CLIENT_ADMIN
+  SYSTEM_ADMIN
+}
+
+enum OrganizationType {
+  NRA
+  MANUFACTURER
+  ACADEMIC
+  DEVELOPMENT_PARTNER
+  OTHER
+}
+
+enum ProjectStatus {
+  SETUP
+  ACTIVE
+  DELIVERY
+  EVALUATION
+  COMPLETED
+}
+
+enum EducationLevel {
+  HIGH_SCHOOL
+  DIPLOMA
+  BACHELORS
+  MASTERS
+  DOCTORATE
+  OTHER
+}
+
+enum RoleType {
+  JUNIOR_INSPECTOR
+  INSPECTOR
+  SENIOR_INSPECTOR
+  UNIT_MANAGER
+  ANALYST
+  DIRECTOR
+  OTHER
+}
+
+enum AssessmentInstrumentType {
+  SELF_ASSESSMENT
+  KNOWLEDGE_TEST
+  COMBINED
+}
+
+enum QuestionType {
+  SELF_RATING
+  MULTIPLE_CHOICE
+  SCENARIO
+  TRUE_FALSE
+}
+
+enum AssessmentType {
+  BASELINE
+  POST_TRAINING
+}
+
+enum AssessmentStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum GapPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum DeliveryMethod {
+  LECTURE
+  CASE_STUDY
+  PRACTICAL
+  WORKSHOP
+  SELF_STUDY
+  PEER_REVIEW
+}
+
+enum RecommendationStatus {
+  RECOMMENDED
+  ACCEPTED
+  REJECTED
+  DELIVERED
+}
+
+enum CurriculumStatus {
+  DRAFT
+  APPROVED
+  DELIVERED
+}
+
+// ============================================
+// ORGANIZATION & USER MODELS
+// ============================================
+
+model Organization {
+  id        String           @id @default(uuid())
+  name      String
+  type      OrganizationType
+  country   String
+  settings  Json             @default("{}")
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  users    User[]
+  projects Project[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole @default(PARTICIPANT)
+  isActive     Boolean  @default(true)
+  profile      Json     @default("{}")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  participant             ParticipantProfile?
+  createdProjects         Project[]                @relation("ProjectCreator")
+  assessments             Assessment[]
+  curriculumRecommendations CurriculumRecommendation[]
+  createdCurriculums      Curriculum[]             @relation("CurriculumCreator")
+  approvedCurriculums     Curriculum[]             @relation("CurriculumApprover")
+  impactReports           ImpactReport[]
+}
+
+model ParticipantProfile {
+  id                     String         @id @default(uuid())
+  userId                 String         @unique
+  user                   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobTitle               String?
+  yearsExperience        Int?
+  educationLevel         EducationLevel?
+  currentRoleType        RoleType?
+  professionalBackground String?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+}
+
+// ============================================
+// PROJECT MODEL
+// ============================================
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      ProjectStatus @default(SETUP)
+  settings    Json          @default("{}")
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  domainId String
+  domain   CompetencyDomain @relation(fields: [domainId], references: [id])
+
+  createdById String
+  createdBy   User   @relation("ProjectCreator", fields: [createdById], references: [id])
+
+  assessments              Assessment[]
+  curriculumRecommendations CurriculumRecommendation[]
+  curriculums              Curriculum[]
+  impactReports            ImpactReport[]
+  projectParticipants      ProjectParticipant[]
+}
+
+model ProjectParticipant {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId     String
+  invitedAt  DateTime @default(now())
+  joinedAt   DateTime?
+  isActive   Boolean  @default(true)
+
+  @@unique([projectId, userId])
+}
+
+// ============================================
+// COMPETENCY FRAMEWORK MODELS
+// ============================================
+
+model CompetencyDomain {
+  id                 String   @id @default(uuid())
+  code               String   @unique
+  name               String
+  description        String?
+  frameworkAlignment String[] @default([])
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  competencyAreas       CompetencyArea[]
+  assessmentInstruments AssessmentInstrument[]
+  learningUnits         LearningUnit[]
+  projects              Project[]
+}
+
+model CompetencyArea {
+  id          String  @id @default(uuid())
+  code        String  @unique
+  name        String
+  description String?
+  sortOrder   Int     @default(0)
+  weight      Float   @default(1.0)
+
+  domainId String
+  domain   CompetencyDomain @relation(fields: [domainId], references: [id])
+
+  competencyItems  CompetencyItem[]
+  gapAnalyses      GapAnalysis[]
+  learningUnits    LearningUnitCompetency[]
+}
+
+model CompetencyLevel {
+  id             String @id @default(uuid())
+  levelNumber    Int    @unique
+  name           String
+  description    String?
+  benchmarkScore Int
+
+  competencyItems CompetencyItem[]
+  gapAnalysesCurrent GapAnalysis[] @relation("CurrentLevel")
+  gapAnalysesTarget  GapAnalysis[] @relation("TargetLevel")
+  learningUnits      LearningUnit[]
+  roleTargets        RoleTargetLevel[]
+}
+
+model CompetencyItem {
+  id               String   @id @default(uuid())
+  code             String   @unique
+  description      String
+  sortOrder        Int      @default(0)
+  learningOutcomes String[] @default([])
+
+  areaId String
+  area   CompetencyArea @relation(fields: [areaId], references: [id])
+
+  levelId String
+  level   CompetencyLevel @relation(fields: [levelId], references: [id])
+
+  assessmentQuestions AssessmentQuestion[]
+}
+
+model RoleTargetLevel {
+  id       String   @id @default(uuid())
+  roleType RoleType
+  areaCode String
+
+  levelId String
+  level   CompetencyLevel @relation(fields: [levelId], references: [id])
+
+  @@unique([roleType, areaCode])
+}
+
+// ============================================
+// ASSESSMENT MODELS
+// ============================================
+
+model AssessmentInstrument {
+  id        String                   @id @default(uuid())
+  name      String
+  type      AssessmentInstrumentType
+  version   String                   @default("1.0")
+  isActive  Boolean                  @default(true)
+  createdAt DateTime                 @default(now())
+  updatedAt DateTime                 @updatedAt
+
+  domainId String
+  domain   CompetencyDomain @relation(fields: [domainId], references: [id])
+
+  questions   AssessmentQuestion[]
+  assessments Assessment[]
+}
+
+model AssessmentQuestion {
+  id              String       @id @default(uuid())
+  questionType    QuestionType
+  questionText    String
+  options         Json?        // For MCQ: [{label: "A", text: "...", isCorrect: true/false}]
+  correctAnswer   Json?        // For validation
+  points          Int          @default(1)
+  difficultyLevel Int          @default(1) // 1-3
+  sortOrder       Int          @default(0)
+  rationale       String?      // Explanation for correct answer
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  instrumentId String
+  instrument   AssessmentInstrument @relation(fields: [instrumentId], references: [id])
+
+  competencyItemId String
+  competencyItem   CompetencyItem @relation(fields: [competencyItemId], references: [id])
+
+  responses AssessmentResponse[]
+}
+
+model Assessment {
+  id              String           @id @default(uuid())
+  assessmentType  AssessmentType
+  status          AssessmentStatus @default(NOT_STARTED)
+  startedAt       DateTime?
+  completedAt     DateTime?
+  timeTakenMinutes Int?
+  isValid         Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  participantId String
+  participant   User   @relation(fields: [participantId], references: [id])
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  instrumentId String
+  instrument   AssessmentInstrument @relation(fields: [instrumentId], references: [id])
+
+  responses     AssessmentResponse[]
+  gapAnalyses   GapAnalysis[]
+  baselineReports ImpactReport[] @relation("BaselineAssessment")
+  postReports     ImpactReport[] @relation("PostAssessment")
+}
+
+model AssessmentResponse {
+  id              String   @id @default(uuid())
+  responseValue   Json     // The actual response (rating, selected option, etc.)
+  score           Int?     // Calculated score
+  answeredAt      DateTime @default(now())
+  timeSpentSeconds Int?
+
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  questionId String
+  question   AssessmentQuestion @relation(fields: [questionId], references: [id])
+
+  @@unique([assessmentId, questionId])
+}
+
+// ============================================
+// GAP ANALYSIS MODEL
+// ============================================
+
+model GapAnalysis {
+  id               String      @id @default(uuid())
+  selfRatingScore  Float?
+  knowledgeScore   Float?
+  gapScore         Float       // Difference from benchmark
+  priority         GapPriority
+  generatedAt      DateTime    @default(now())
+
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  competencyAreaId String
+  competencyArea   CompetencyArea @relation(fields: [competencyAreaId], references: [id])
+
+  currentLevelId String?
+  currentLevel   CompetencyLevel? @relation("CurrentLevel", fields: [currentLevelId], references: [id])
+
+  targetLevelId String?
+  targetLevel   CompetencyLevel? @relation("TargetLevel", fields: [targetLevelId], references: [id])
+
+  recommendations CurriculumRecommendationGap[]
+}
+
+// ============================================
+// CURRICULUM MODELS
+// ============================================
+
+model LearningUnit {
+  id              String           @id @default(uuid())
+  code            String           @unique
+  name            String
+  description     String?
+  learningOutcomes String[]        @default([])
+  durationHours   Float            @default(0)
+  deliveryMethods DeliveryMethod[] @default([])
+  resources       Json             @default("{}")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  domainId String
+  domain   CompetencyDomain @relation(fields: [domainId], references: [id])
+
+  levelAppropriateId String?
+  levelAppropriate   CompetencyLevel? @relation(fields: [levelAppropriateId], references: [id])
+
+  competencyAreas LearningUnitCompetency[]
+  prerequisites   LearningUnitPrerequisite[] @relation("UnitPrerequisites")
+  prerequisiteFor LearningUnitPrerequisite[] @relation("PrerequisiteFor")
+  recommendations CurriculumRecommendation[]
+  curriculumUnits CurriculumLearningUnit[]
+}
+
+model LearningUnitCompetency {
+  id String @id @default(uuid())
+
+  learningUnitId String
+  learningUnit   LearningUnit @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
+
+  competencyAreaId String
+  competencyArea   CompetencyArea @relation(fields: [competencyAreaId], references: [id])
+
+  @@unique([learningUnitId, competencyAreaId])
+}
+
+model LearningUnitPrerequisite {
+  id String @id @default(uuid())
+
+  unitId String
+  unit   LearningUnit @relation("UnitPrerequisites", fields: [unitId], references: [id], onDelete: Cascade)
+
+  prerequisiteId String
+  prerequisite   LearningUnit @relation("PrerequisiteFor", fields: [prerequisiteId], references: [id])
+
+  @@unique([unitId, prerequisiteId])
+}
+
+model CurriculumRecommendation {
+  id           String               @id @default(uuid())
+  priorityRank Int
+  rationale    String?
+  status       RecommendationStatus @default(RECOMMENDED)
+  generatedAt  DateTime             @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  participantId String?
+  participant   User?   @relation(fields: [participantId], references: [id])
+
+  learningUnitId String
+  learningUnit   LearningUnit @relation(fields: [learningUnitId], references: [id])
+
+  gapAnalyses CurriculumRecommendationGap[]
+}
+
+model CurriculumRecommendationGap {
+  id String @id @default(uuid())
+
+  recommendationId String
+  recommendation   CurriculumRecommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+
+  gapAnalysisId String
+  gapAnalysis   GapAnalysis @relation(fields: [gapAnalysisId], references: [id])
+
+  @@unique([recommendationId, gapAnalysisId])
+}
+
+model Curriculum {
+  id               String           @id @default(uuid())
+  name             String
+  description      String?
+  totalHours       Float            @default(0)
+  deliverySchedule Json             @default("{}")
+  status           CurriculumStatus @default(DRAFT)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  createdById String
+  createdBy   User   @relation("CurriculumCreator", fields: [createdById], references: [id])
+
+  approvedById String?
+  approvedBy   User?   @relation("CurriculumApprover", fields: [approvedById], references: [id])
+
+  learningUnits CurriculumLearningUnit[]
+}
+
+model CurriculumLearningUnit {
+  id        String @id @default(uuid())
+  sortOrder Int    @default(0)
+
+  curriculumId String
+  curriculum   Curriculum @relation(fields: [curriculumId], references: [id], onDelete: Cascade)
+
+  learningUnitId String
+  learningUnit   LearningUnit @relation(fields: [learningUnitId], references: [id])
+
+  @@unique([curriculumId, learningUnitId])
+}
+
+// ============================================
+// IMPACT REPORT MODEL
+// ============================================
+
+model ImpactReport {
+  id                        String   @id @default(uuid())
+  overallImprovementPercent Float?
+  areaImprovements          Json     @default("{}")
+  levelChanges              Json     @default("{}")
+  recommendations           String?
+  reportData                Json     @default("{}")
+  generatedAt               DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  participantId String?
+  participant   User?   @relation(fields: [participantId], references: [id])
+
+  baselineAssessmentId String?
+  baselineAssessment   Assessment? @relation("BaselineAssessment", fields: [baselineAssessmentId], references: [id])
+
+  postAssessmentId String?
+  postAssessment   Assessment? @relation("PostAssessment", fields: [postAssessmentId], references: [id])
+}
